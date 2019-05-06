@@ -4,7 +4,7 @@ const crypto = require("crypto")
 const strKey = crypto.createHash('md5').update("27iydButojt14").digest('hex');
 
 const proxys = {
-    main: "http://dplus-system.com:3499/",
+    main: "http://localhost:3010/",
     develop: "http://localhost:3499/",
     testPJohn: "http://192.168.20.60:3499/",
     test: "http://dplus-system.com:3599/"
@@ -96,6 +96,23 @@ const public_functions = {
     api_get(url = "", apiName = "") {
         return new Promise((reslove, reject) => {
             fetch(url)
+                .then(response => response.json())
+                .then((responseJson) => {
+                    console.log(apiName, responseJson)
+                    reslove(responseJson)
+                })
+        })
+    },
+    api_post(url = "", apiName = "", dataSend = []) {
+        return new Promise((reslove) => {
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                body: JSON.stringify(dataSend)
+            })
                 .then(response => response.json())
                 .then((responseJson) => {
                     console.log(apiName, responseJson)
