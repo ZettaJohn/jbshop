@@ -53,7 +53,7 @@ class AddNewItem extends Component {
       last_update: last_update,
       user_update: user_update
     }]
-    var url = proxy.main + "item/add-item/"
+    var url = proxy.develop + "web-item/add-item/"
     var res_api = await public_function.api_post(url, "_callApiSaveNewItem", dataSend)
     if (res_api.status == 200) {
       self.setState({ is_confirm: false })
