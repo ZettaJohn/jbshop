@@ -37,7 +37,7 @@ class ClaimOrder extends Component {
         this._getOderSearch(this)
     }
     async _getOderSearch(self) {
-        var url = proxy.develop + "web-item/search-order/" + self.state.inSearch
+        var url = proxy.main + "web-item/search-order/" + self.state.inSearch
         try {
             var res_api = await public_function.api_get(url, "_getOderSearch")
             if (res_api.status === 200) {
@@ -64,7 +64,7 @@ class ClaimOrder extends Component {
         })
     }
     async _getAutocomOrder(self) {
-        var url = proxy.develop + "web-item/autocom-search-order/" + self.state.value
+        var url = proxy.main + "web-item/autocom-search-order/" + self.state.value
         try {
             var res_api = await public_function.api_get(url, "_getAutocomOrder")
             if (res_api.status === 200) {
@@ -331,7 +331,7 @@ class ClaimOrder extends Component {
         this.setState({ alert_open: stats })
     }
     async _callApiSaveOrder(self) {
-        var url = proxy.develop + "web-item/claim-item/"
+        var url = proxy.main + "web-item/claim-item/"
         try {
             var res_api = await public_function.api_post(url, "_callApiSaveOrder", self.state.list_item_sell)
             if (res_api.status === 201) {

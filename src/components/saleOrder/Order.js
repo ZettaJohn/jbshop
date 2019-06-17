@@ -41,7 +41,7 @@ class Order extends Component {
         this._getItemSearch(this)
     }
     async _getItemSearch(self) {
-        var url = proxy.develop + "web-item/search-item/" + self.state.inSearch
+        var url = proxy.main + "web-item/search-item/" + self.state.inSearch
         try {
             var res_api = await public_function.api_get(url, "_getItemSearch")
             if (res_api.status === 200) {
@@ -61,7 +61,7 @@ class Order extends Component {
         }
     }
     async _getBestSeller(self) {
-        var url = proxy.develop + "web-item/best-seller/"
+        var url = proxy.main + "web-item/best-seller/"
         var res_api = await public_function.api_get(url, "_getBestSeller")
         if (res_api.status === 200) {
             self.setState({ item_best_seller: res_api.result }, () => self._setListBestSeller(self))
@@ -77,7 +77,7 @@ class Order extends Component {
         })
     }
     async _getAutocomItem(self) {
-        var url = proxy.develop + "web-item/autocom-search/" + self.state.value
+        var url = proxy.main + "web-item/autocom-search/" + self.state.value
         var res_api = await public_function.api_get(url, "_getAutocomItem")
         if (res_api.status === 200) {
             self.setState({ dataSrc: res_api.result })
@@ -310,7 +310,7 @@ class Order extends Component {
         this.setState({ alert_open: stats })
     }
     async _callApiSaveOrder(self) {
-        var url = proxy.develop + "web-item/sell-item/"
+        var url = proxy.main + "web-item/sell-item/"
         try {
             var res_api = await public_function.api_post(url, "_callApiSaveOrder", self.state.list_item_sell)
             if (res_api.status === 201) {

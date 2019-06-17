@@ -16,11 +16,11 @@ class AddNewItem extends Component {
       is_confirm: false,
       is_alert: false,
       item_id: "",
-      barcode:"",
+      barcode: "",
       item_name: "",
       old_price: 0,
       new_price: 0,
-      unit: "",
+      unit: "ชิ้น",
       last_update: moment().format("YYYY-MM-DD"),
       user_update: "admin"
     }
@@ -35,9 +35,16 @@ class AddNewItem extends Component {
       is_confirm: true
     })
   }
+  _alertbox = (stats) => {
+    this.setState({ is_alert: stats })
+  }
   _confirm = (conf) => {
     if (conf) {
       this._callApiSaveNewItem(this)
+    } else {
+      this.setState({ is_confirm: false }, () => {
+        // console.log(this.state.is_confirm)
+      })
     }
   }
   async _callApiSaveNewItem(self) {
@@ -53,10 +60,11 @@ class AddNewItem extends Component {
       last_update: last_update,
       user_update: user_update
     }]
-    var url = proxy.develop + "web-item/add-item/"
+    var url = proxy.main + "web-item/add-item/"
     var res_api = await public_function.api_post(url, "_callApiSaveNewItem", dataSend)
     if (res_api.status == 201) {
       self.setState({ is_confirm: false })
+      self.setState({ is_alert: true, modal_body: "เพิ่มสินค้าเรียบร้อยแล้ว" })
       self.props.dispatch(is_loader(false))
     }
   }
@@ -135,7 +143,7 @@ class AddNewItem extends Component {
             </bs4.Row>
           </bs4.Container>
         </bs4.Container>
-        <ModalAlertBox alertOpen={this.state.is_alert} modalBody={this.state.modal_body} />
+        <ModalAlertBox alertOpen={this.state.is_alert} modalBody={this.state.modal_body} checkStat={this._alertbox} />
         <ModalConfirmBox confirmOpen={this.state.is_confirm} checkStat={this._confirm} />
       </div>
     )

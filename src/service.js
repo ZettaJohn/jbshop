@@ -4,7 +4,7 @@ const crypto = require("crypto")
 const strKey = crypto.createHash('md5').update("27iydButojt14").digest('hex');
 
 const proxys = {
-    main: "http://localhost:3010/",
+    main: "http://150.95.26.68:3010/",
     develop: "http://localhost:3010/",
     testPJohn: "http://192.168.20.60:3499/",
     test: "http://dplus-system.com:3599/"
