@@ -8,7 +8,7 @@ import Autocomplete from 'react-autocomplete'
 
 const { defaultItem, proxy, public_function } = require("../../service")
 
-class Order extends Component {
+class ClaimOrder extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -23,10 +23,6 @@ class Order extends Component {
             dataSrc: [{ barcode: "", item_name: "" }],
         }
     }
-    componentDidMount() {
-        this._getBestSeller(this)
-        this._setListBestSeller(this)
-    }
     _onChangeForm = (e) => {
         var name = e.target.name
         var val = e.target.value
@@ -34,16 +30,16 @@ class Order extends Component {
     }
     _onKeypress_enter = (e) => {
         if (e.key === "Enter") {
-            this._getItemSearch(this)
+            this._getOderSearch(this)
         }
     }
     _onClick_search = () => {
-        this._getItemSearch(this)
+        this._getOderSearch(this)
     }
-    async _getItemSearch(self) {
-        var url = proxy.develop + "web-item/search-item/" + self.state.inSearch
+    async _getOderSearch(self) {
+        var url = proxy.develop + "web-item/search-order/" + self.state.inSearch
         try {
-            var res_api = await public_function.api_get(url, "_getItemSearch")
+            var res_api = await public_function.api_get(url, "_getOderSearch")
             if (res_api.status === 200) {
                 self.setState({ inSearch: "", value: "" })
                 self._addListItemSell(self, res_api.result)
@@ -60,28 +56,21 @@ class Order extends Component {
             })
         }
     }
-    async _getBestSeller(self) {
-        var url = proxy.develop + "web-item/best-seller/"
-        var res_api = await public_function.api_get(url, "_getBestSeller")
-        if (res_api.status === 200) {
-            self.setState({ item_best_seller: res_api.result }, () => self._setListBestSeller(self))
-        } else {
-
-        }
-    }
     _onChangeAutocom = (e) => {
         var id = e.target.id
         var val = e.target.value
         this.setState({ value: val, [id]: val, inSearch: val }, () => {
-            this._getAutocomItem(this)
+            this._getAutocomOrder(this)
         })
     }
-    async _getAutocomItem(self) {
-        var url = proxy.develop + "web-item/autocom-search/" + self.state.value
-        var res_api = await public_function.api_get(url, "_getAutocomItem")
-        if (res_api.status === 200) {
-            self.setState({ dataSrc: res_api.result })
-        } else {
+    async _getAutocomOrder(self) {
+        var url = proxy.develop + "web-item/autocom-search-order/" + self.state.value
+        try {
+            var res_api = await public_function.api_get(url, "_getAutocomOrder")
+            if (res_api.status === 200) {
+                self.setState({ dataSrc: res_api.result })
+            }
+        } catch (error) {
 
         }
     }
@@ -93,16 +82,21 @@ class Order extends Component {
             if (getIndex < 0) {
                 itemQty++
                 totalPrice = parseFloat(val.new_price)
+                var getType_tran = (itemQty < 0) ? 3 : 2
                 var newObj = Object.assign({
                     item_qty: itemQty,
-                    type_tran: 3,
+                    type_tran: getType_tran,
                     discount: ((val.new_price * itemQty) - totalPrice),
-                    price: totalPrice, total_price: totalPrice
+                    price: totalPrice,
+                    total_price: totalPrice,
+                    ref_doc: val.doc_no,
+                    remark: ""
                 }, val)
                 data_list.push(newObj)
             } else {
                 itemQty = parseInt(data_list[getIndex].item_qty) + 1
                 totalPrice = parseFloat(data_list[getIndex].total_price) + parseFloat(val.new_price)
+                var getType_tran = (itemQty < 0) ? 3 : 2
                 var newObj = {
                     item_id: val.item_id,
                     barcode: val.barcode,
@@ -115,8 +109,10 @@ class Order extends Component {
                     item_qty: itemQty,
                     discount: ((val.new_price * itemQty) - totalPrice),
                     price: totalPrice,
-                    type_tran: 3,
-                    total_price: totalPrice
+                    type_tran: getType_tran,
+                    total_price: totalPrice,
+                    ref_doc: val.doc_no,
+                    remark: ""
                 }
                 data_list.splice(getIndex, 1, newObj)
             }
@@ -135,26 +131,29 @@ class Order extends Component {
             var getIndex = public_function.getIndexArray(val.item_id, data_list, "item_id")
             itemQty = parseInt(data_list[getIndex].item_qty) - 1
             totalPrice = parseFloat(data_list[getIndex].item_price) - parseFloat(val.new_price)
-            if (itemQty < 0) {
-                data_list.splice(getIndex, 1)
-            } else {
-                var newObj = {
-                    item_id: val.item_id,
-                    barcode: val.barcode,
-                    item_name: val.item_name,
-                    old_price: val.old_price,
-                    new_price: val.new_price,
-                    unit: val.unit,
-                    last_update: val.last_update,
-                    user_update: val.user_update,
-                    item_qty: itemQty,
-                    discount: ((val.new_price * itemQty) - totalPrice),
-                    price: totalPrice,
-                    type_tran: 3,
-                    total_price: totalPrice
-                }
-                data_list.splice(getIndex, 1, newObj)
+            var getType_tran = (itemQty < 0) ? 3 : 2
+            // if (itemQty < 0) {
+            //     data_list.splice(getIndex, 1)
+            // } else {
+            var newObj = {
+                item_id: val.item_id,
+                barcode: val.barcode,
+                item_name: val.item_name,
+                old_price: val.old_price,
+                new_price: val.new_price,
+                unit: val.unit,
+                last_update: val.last_update,
+                user_update: val.user_update,
+                item_qty: itemQty,
+                discount: ((val.new_price * itemQty) - totalPrice),
+                price: totalPrice,
+                type_tran: getType_tran,
+                total_price: totalPrice,
+                ref_doc: "",
+                remark: ""
             }
+            data_list.splice(getIndex, 1, newObj)
+            // }
         });
         self.setState({
             list_item_sell: data_list
@@ -165,6 +164,7 @@ class Order extends Component {
         var itemQty = 0, totalPrice = 0
         var getIndex = public_function.getIndexArray(itemID, data_list, "item_id")
         itemQty = parseInt(valChange)
+        var getType_tran = (itemQty < 0) ? 3 : 2
         totalPrice = parseFloat(data_list[getIndex].new_price) * parseInt(valChange)
         var newObj = {
             item_id: data_list[getIndex].item_id,
@@ -178,14 +178,16 @@ class Order extends Component {
             item_qty: itemQty,
             discount: ((data_list[getIndex].new_price * itemQty) - totalPrice),
             price: totalPrice,
-            type_tran: 3,
-            total_price: totalPrice
+            type_tran: getType_tran,
+            total_price: totalPrice,
+            ref_doc: data_list[getIndex].ref_doc,
+            remark: data_list[getIndex].remark
         }
-        if (itemQty < 1) {
-            data_list.splice(getIndex, 1)
-        } else {
-            data_list.splice(getIndex, 1, newObj)
-        }
+        // if (itemQty < 1) {
+        //     data_list.splice(getIndex, 1)
+        // } else {
+        data_list.splice(getIndex, 1, newObj)
+        // }
         self.setState({
             list_item_sell: data_list
         }, () => {
@@ -209,8 +211,38 @@ class Order extends Component {
             item_qty: data_list[getIndex].item_qty,
             discount: ((data_list[getIndex].new_price * data_list[getIndex].item_qty) - totalPrice),
             price: totalPrice,
-            type_tran: 3,
-            total_price: totalPrice
+            type_tran: data_list[getIndex].type_tran,
+            total_price: totalPrice,
+            ref_doc: data_list[getIndex].ref_doc,
+            remark: data_list[getIndex].remark
+        }
+        data_list.splice(getIndex, 1, newObj)
+        self.setState({
+            list_item_sell: data_list
+        }, () => {
+            self._setTableShowItemSell(self)
+        })
+    }
+    _changeRemark(self, itemID, valChange) {
+        var data_list = self.state.list_item_sell
+        var getIndex = public_function.getIndexArray(itemID, data_list, "item_id")
+        var getRemark = valChange
+        var newObj = {
+            item_id: data_list[getIndex].item_id,
+            barcode: data_list[getIndex].barcode,
+            item_name: data_list[getIndex].item_name,
+            old_price: data_list[getIndex].old_price,
+            new_price: data_list[getIndex].new_price,
+            unit: data_list[getIndex].unit,
+            last_update: data_list[getIndex].last_update,
+            user_update: data_list[getIndex].user_update,
+            item_qty: data_list[getIndex].item_qty,
+            discount: data_list[getIndex].discount,
+            price: data_list[getIndex].price,
+            type_tran: data_list[getIndex].type_tran,
+            total_price: data_list[getIndex].total_price,
+            ref_doc: data_list[getIndex].ref_doc,
+            remark: getRemark
         }
         data_list.splice(getIndex, 1, newObj)
         self.setState({
@@ -244,26 +276,34 @@ class Order extends Component {
                             <bs4.Input type="number" className="inputNum" value={val.total_price} onChange={(e) => self._changeItemPrice(self, val.item_id, e.target.value)} />
                         </span>
                     </th>
+                    <th>
+                        <span style={{ float: "right" }}>
+                            <bs4.Input type="text" value={val.remark} onChange={(e) => self._changeRemark(self, val.item_id, e.target.value)} />
+                        </span>
+                    </th>
+                    <th style={{ textAlign: "center" }} >
+                        {val.doc_no}
+                    </th>
                 </tr >
             )
         });
         show_list_total.push(
             <tr>
-                <th colSpan="3" style={{ textAlign: "right" }} >สินค้าทั้งหมด: </th>
+                <th colSpan="5" style={{ textAlign: "right" }} >สินค้าทั้งหมด: </th>
                 <th style={{ textAlign: "right" }} > {public_function.numberFormat(totalQty)} </th>
                 <th style={{ textAlign: "left" }} >ชิ้น</th>
             </tr>
         )
         show_list_total.push(
             <tr>
-                <th colSpan="3" style={{ textAlign: "right" }} >ส่วนลด: </th>
+                <th colSpan="5" style={{ textAlign: "right" }} >ส่วนลด: </th>
                 <th style={{ textAlign: "right" }} > {public_function.numberFormat(totalDC)} </th>
                 <th style={{ textAlign: "left" }} >บาท</th>
             </tr>
         )
         show_list_total.push(
             <tr>
-                <th colSpan="3" style={{ textAlign: "right" }} >ราคารวม: </th>
+                <th colSpan="5" style={{ textAlign: "right" }} >ราคารวม: </th>
                 <th style={{ textAlign: "right" }} > {public_function.numberFormat(totalPrice)} </th>
                 <th style={{ textAlign: "left" }} >บาท</th>
             </tr>
@@ -273,27 +313,8 @@ class Order extends Component {
             show_total: show_list_total
         })
     }
-    _setListBestSeller(self) {
-        var data_list = []
-        data_list.push(
-            <bs4.ListGroupItem className="bg-primary" >
-                <span style={{ float: "left" }} >{'สินค้า'}</span>
-                <span style={{ float: "right" }} >{'ราคา/ชิ้น'} </span>
-            </bs4.ListGroupItem>
-        )
-        self.state.item_best_seller.forEach((val) => {
-            data_list.push(
-                <bs4.ListGroupItem tag="a" href="#" onClick={() => self._addListItemSell(self, [val])} action>
-                    <span style={{ float: "left" }} >{val.item_name}</span>
-                    <span style={{ float: "right" }} >{val.new_price} </span>
-                </bs4.ListGroupItem>
-            )
-        });
-        self.setState({
-            list_best_seller: data_list
-        })
-    }
     _onClick_save = () => {
+        console.log("object", this.state.list_item_sell)
         this.setState({ is_confirm: true })
     }
     _confirm = (conf) => {
@@ -310,7 +331,7 @@ class Order extends Component {
         this.setState({ alert_open: stats })
     }
     async _callApiSaveOrder(self) {
-        var url = proxy.develop + "web-item/sell-item/"
+        var url = proxy.develop + "web-item/claim-item/"
         try {
             var res_api = await public_function.api_post(url, "_callApiSaveOrder", self.state.list_item_sell)
             if (res_api.status === 201) {
@@ -333,31 +354,31 @@ class Order extends Component {
         return (
             <div>
                 <bs4.Container className="bgContainer-White" fluid>
-                    <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >ทำรายการขายสินค้า</div>
+                    <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >ทำรายการเคลมสินค้า</div>
                     <bs4.Row>
-                        <bs4.Col xs="4" >
+                        <bs4.Col xs="2" >
                             <Autocomplete
                                 items={
                                     this.state.dataSrc
                                 }
                                 //   shouldItemRender={(item, value) => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1}
-                                shouldItemRender={(item, value) => item.item_name}
-                                getItemValue={item => item.barcode}
+                                shouldItemRender={(item, value) => item.doc_no}
+                                getItemValue={item => item.doc_no}
                                 renderItem={(item, highlighted) =>
                                     <div
-                                        key={item.barcode}
+                                        key={item.doc_no}
                                         style={{ backgroundColor: highlighted ? '#eee' : 'transparent' }}
                                     >
-                                        {item.item_name}
+                                        {item.doc_no}
                                     </div>
                                 }
                                 value={this.state.value}
                                 onChange={this._onChangeAutocom}
-                                onSelect={(value, item) => this.setState({ value: item.item_name, inSearch: item.barcode })}
+                                onSelect={(value, item) => this.setState({ value: item.doc_no, inSearch: item.doc_no })}
                             />
                         </bs4.Col>
                         <bs4.Col xs="2" >
-                            <bs4.Input type="text" autoFocus name="inSearch" placeholder="สแกนบาร์โค๊ดสินค้า" onChange={this._onChangeForm} onKeyPress={this._onKeypress_enter} />
+                            <bs4.Input type="text" autoFocus name="inSearch" placeholder="สแกนใบขายสินค้า" onChange={this._onChangeForm} onKeyPress={this._onKeypress_enter} />
                         </bs4.Col>
                         <bs4.Col xs="2" >
                             <bs4.Button id="btnSearch" color="info" onClick={this._onClick_search} > <MdIcon.MdSearch className="iconlg" /> ค้นหา</bs4.Button>
@@ -365,14 +386,8 @@ class Order extends Component {
                     </bs4.Row>
                     <hr className="hrCustom" />
                     <bs4.Row>
-                        <bs4.Col xs={{ size: 4 }}>
-                            <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >สินค้าขายดี</div>
-                            <bs4.ListGroup flush>
-                                {this.state.list_best_seller}
-                            </bs4.ListGroup>
-                        </bs4.Col>
                         <bs4.Col xs={{ size: 8 }} >
-                            <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >รายการขายสินค้า
+                            <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >รายการเคลมสินค้า
                             {/* <bs4.Button type="button" id="btnChangeDel" color="danger" >ยกเลิกรายการ</bs4.Button> */}
                             </div>
                             <bs4.Table>
@@ -382,6 +397,8 @@ class Order extends Component {
                                     <th style={{ textAlign: "right" }} >จำนวน</th>
                                     <th style={{ textAlign: "right" }} >ราคา/ชิ้น</th>
                                     <th style={{ textAlign: "right" }} >ราคารวม</th>
+                                    <th style={{ textAlign: "center" }} >หมายเหตุ</th>
+                                    <th style={{ textAlign: "center" }} >เอกสารอ้างอิง</th>
                                 </thead>
                                 {this.state.show_item_sell}
                             </bs4.Table>
@@ -407,4 +424,4 @@ class Order extends Component {
 function mapStateToProps(state) {
     return state
 }
-export default connect(mapStateToProps)(Order);
+export default connect(mapStateToProps)(ClaimOrder);

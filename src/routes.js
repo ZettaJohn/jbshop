@@ -2,6 +2,7 @@ import App from './pages/App'
 import Login from "./pages/Login"
 import Item from "./pages/Item"
 import SaleOrder from "./pages/SaleOrder"
+import Report from "./pages/Report"
 
 const routes = [{
     path: '/',
@@ -10,9 +11,7 @@ const routes = [{
     childRoutes: [
         { path: '/item/:check', component: Item },
         { path: '/sale-order/:check', component: SaleOrder },
-        // { path: '/report/:checkReport', component: Report },
-        // { path: '/clearbill/:checkClearBill', component: Clearbill },
-        // { path: '/form_acc', component: Form_accounting },
+        { path: '/report/:check', component: Report },
         // { path: '/edit/:checkEdit', component: Edit },
         // { path: '/rate/:checkRate/:cusCode', component: Rate },
         // { path: '/calendar', component: Calendar },

@@ -7,7 +7,7 @@ class Alert_Box extends Component {
     this.state = {
       modal: false,
       modalBody: "",
-      modalHeader: "TMS System message.",
+      modalHeader: "System message.",
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -18,9 +18,14 @@ class Alert_Box extends Component {
     });
   }
   componentWillReceiveProps(nextProps) {
-    console.log("nextProps", nextProps)
     this.setState({ modal: nextProps.alertOpen,modalBody:nextProps.modalBody })
   }
+  onClick_cancel=()=>{
+    this.props.checkStat(false)
+    this.setState({
+        modal: false
+    });
+}
   render() {
     return (
       <div>
@@ -30,7 +35,7 @@ class Alert_Box extends Component {
             <p style={{textAlign:"center"}} >{this.state.modalBody}</p>
           </bs4.ModalBody>
           <bs4.ModalFooter>
-            <bs4.Button style={{width:"100px"}} color="danger" onClick={this.toggle}>Cancel</bs4.Button>
+            <bs4.Button style={{width:"100px"}} color="info" onClick={this.onClick_cancel}>OK</bs4.Button>
           </bs4.ModalFooter>
         </bs4.Modal>
       </div>

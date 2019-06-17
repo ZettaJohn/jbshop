@@ -5,7 +5,7 @@ const strKey = crypto.createHash('md5').update("27iydButojt14").digest('hex');
 
 const proxys = {
     main: "http://localhost:3010/",
-    develop: "http://localhost:3499/",
+    develop: "http://localhost:3010/",
     testPJohn: "http://192.168.20.60:3499/",
     test: "http://dplus-system.com:3599/"
 }
@@ -101,6 +101,9 @@ const public_functions = {
                     console.log(apiName, responseJson)
                     reslove(responseJson)
                 })
+                .catch((err)=>{
+                    reject(err)
+                })
         })
     },
     api_post(url = "", apiName = "", dataSend = []) {
@@ -122,15 +125,21 @@ const public_functions = {
     },
     encryption(strData = "") {
         var mykey = crypto.createCipher('aes-128-cbc', strKey);
-        var mystr = mykey.update(strData, 'utf8', 'hex')
-        mystr += mykey.update.final('hex');
+        var mystr = mykey.update(strData, 'utf8', 'hex') + mykey.final('hex');
         return mystr
+        // var mykey = crypto.createCipher('aes-128-cbc', strKey);
+        // var mystr = mykey.update(strData, 'utf8', 'hex')
+        // mystr += mykey.update.final('hex');
+        // return mystr
     },
     decryption(strData = "") {
         var mykey = crypto.createDecipher('aes-128-cbc', strKey);
-        var mystr = mykey.update(strData, 'hex', 'utf8')
-        mystr += mykey.update.final('utf8');
+        var mystr = mykey.update(strData, 'hex', 'utf8')+ mykey.final('utf8');
         return mystr
+        // var mykey = crypto.createDecipher('aes-128-cbc', strKey);
+        // var mystr = mykey.update(strData, 'hex', 'utf8')
+        // mystr += mykey.update.final('utf8');
+        // return mystr
     }
 }
 module.exports = {

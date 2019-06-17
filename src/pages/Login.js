@@ -35,8 +35,9 @@ class Login extends Component {
         let id = this.state.inUserName, pass = this.state.inPassword
 
         if (id != "" && pass != "") {
+            id=public_function.encryption(this.state.inUserName)
             pass = public_function.encryption(this.state.inPassword)
-            let url = proxy.main + "web-api/login/" + id + "&" + pass
+            let url = proxy.main + "web-login/login/" + id + "&" + pass
             var res_login = await public_function.api_get(url, "Login")
             if (res_login.status === 200) {
                 self.setState({
@@ -46,7 +47,7 @@ class Login extends Component {
                 }, () => {
                     saveToLocalStorage("data_user", res_login.result)
                     setTimeout(() => {
-                        browserHistory.push('/speceialtask')
+                        browserHistory.push('/sale-order/saleOrder')
                     }, 1000);
                 })
             } else {

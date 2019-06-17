@@ -25,8 +25,13 @@ class Confirm_Box extends Component {
             modal: !this.state.modal
         });
     }
+    onClick_cancel=()=>{
+        this.props.checkStat(false)
+        this.setState({
+            modal: false
+        });
+    }
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps", nextProps)
         this.setState({ modal: nextProps.confirmOpen })
     }
     render() {
@@ -39,7 +44,7 @@ class Confirm_Box extends Component {
                     </bs4.ModalBody>
                     <bs4.ModalFooter>
                         <bs4.Button style={{width:"100px"}} color="success" onClick={this.onClick_ok}>OK</bs4.Button>
-                        <bs4.Button style={{width:"100px"}} color="danger" onClick={this.toggle}>Cancel</bs4.Button>
+                        <bs4.Button style={{width:"100px"}} color="danger" onClick={this.onClick_cancel}>Cancel</bs4.Button>
                     </bs4.ModalFooter>
                 </bs4.Modal>
             </div>

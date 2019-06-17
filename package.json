@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "addmonths": "^1.0.1",
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.0",
     "moment": "^2.24.0",
     "react": "^16.8.6",
+    "react-autocomplete": "^1.8.1",
+    "react-datepicker": "^1.8.0",
     "react-dom": "^16.8.6",
     "react-icons": "^3.6.1",
     "react-redux": "^5.0.6",

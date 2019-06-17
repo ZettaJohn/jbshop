@@ -19,8 +19,14 @@ class Menu extends Component {
                                 <bs4.DropdownItem href="/sale-order/saleOrder" >
                                     ขายสินค้า
                                 </bs4.DropdownItem>
-                                <bs4.DropdownItem href="/clearbill/claim" >
+                                <bs4.DropdownItem href="/sale-order/purchase" >
                                     ซื้อสินค้าเข้า
+                                </bs4.DropdownItem>
+                                <bs4.DropdownItem href="/sale-order/return" >
+                                    คืนสินค้า
+                                </bs4.DropdownItem>
+                                <bs4.DropdownItem href="/sale-order/claim" >
+                                    เคลมสินค้า
                                 </bs4.DropdownItem>
                             </bs4.DropdownMenu>
                         </bs4.UncontrolledDropdown>
@@ -30,19 +36,19 @@ class Menu extends Component {
                                 รายงานทั้งหมด
                             </bs4.DropdownToggle>
                             <bs4.DropdownMenu right>
-                                <bs4.DropdownItem href="/tmsplan/transport-plan" >
+                                <bs4.DropdownItem href="/tmsplan/report_item" >
                                     รายงานสินค้าทั้งหมด
                                 </bs4.DropdownItem>
-                                <bs4.DropdownItem href="/report/tracking-status" >
+                                <bs4.DropdownItem href="/report/report_stock" >
                                     รายงานสต๊อกสินค้า
                                 </bs4.DropdownItem>
-                                <bs4.DropdownItem href="/report/tracking-status-claim" >
+                                <bs4.DropdownItem href="/report/report_saleorder" >
                                     รายงานการขายสินค้า
                                 </bs4.DropdownItem>
-                                <bs4.DropdownItem href="/report/clearcashbycleardate" >
+                                <bs4.DropdownItem href="/report/report_purchaseorder" >
                                     รายงานการซื้อสินค้า
                                 </bs4.DropdownItem>
-                                <bs4.DropdownItem href="/report/formaccounting" >
+                                <bs4.DropdownItem href="/report/report_sale_pur_order" >
                                     รายงานรวมการซื้อ-ขายสินค้า
                                 </bs4.DropdownItem>
                             </bs4.DropdownMenu>
@@ -56,7 +62,7 @@ class Menu extends Component {
                                 <bs4.DropdownItem href="/item/addItem" >
                                     เพิ่มสินค้า / แก้ไขสินค้า
                                 </bs4.DropdownItem>
-                                <bs4.DropdownItem href="/item/addItem" >
+                                <bs4.DropdownItem href="/item/adjustStock" >
                                     ปรับสต๊อกสินค้า
                                 </bs4.DropdownItem>
                             </bs4.DropdownMenu>

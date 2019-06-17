@@ -8,7 +8,7 @@ import Autocomplete from 'react-autocomplete'
 
 const { defaultItem, proxy, public_function } = require("../../service")
 
-class Order extends Component {
+class PurchaseOrder extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -95,7 +95,7 @@ class Order extends Component {
                 totalPrice = parseFloat(val.new_price)
                 var newObj = Object.assign({
                     item_qty: itemQty,
-                    type_tran: 3,
+                    type_tran: 2,
                     discount: ((val.new_price * itemQty) - totalPrice),
                     price: totalPrice, total_price: totalPrice
                 }, val)
@@ -115,7 +115,7 @@ class Order extends Component {
                     item_qty: itemQty,
                     discount: ((val.new_price * itemQty) - totalPrice),
                     price: totalPrice,
-                    type_tran: 3,
+                    type_tran: 2,
                     total_price: totalPrice
                 }
                 data_list.splice(getIndex, 1, newObj)
@@ -150,7 +150,7 @@ class Order extends Component {
                     item_qty: itemQty,
                     discount: ((val.new_price * itemQty) - totalPrice),
                     price: totalPrice,
-                    type_tran: 3,
+                    type_tran: 2,
                     total_price: totalPrice
                 }
                 data_list.splice(getIndex, 1, newObj)
@@ -178,7 +178,7 @@ class Order extends Component {
             item_qty: itemQty,
             discount: ((data_list[getIndex].new_price * itemQty) - totalPrice),
             price: totalPrice,
-            type_tran: 3,
+            type_tran: 2,
             total_price: totalPrice
         }
         if (itemQty < 1) {
@@ -209,7 +209,7 @@ class Order extends Component {
             item_qty: data_list[getIndex].item_qty,
             discount: ((data_list[getIndex].new_price * data_list[getIndex].item_qty) - totalPrice),
             price: totalPrice,
-            type_tran: 3,
+            type_tran: 2,
             total_price: totalPrice
         }
         data_list.splice(getIndex, 1, newObj)
@@ -310,7 +310,7 @@ class Order extends Component {
         this.setState({ alert_open: stats })
     }
     async _callApiSaveOrder(self) {
-        var url = proxy.develop + "web-item/sell-item/"
+        var url = proxy.develop + "web-item/purchase-item/"
         try {
             var res_api = await public_function.api_post(url, "_callApiSaveOrder", self.state.list_item_sell)
             if (res_api.status === 201) {
@@ -333,7 +333,7 @@ class Order extends Component {
         return (
             <div>
                 <bs4.Container className="bgContainer-White" fluid>
-                    <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >ทำรายการขายสินค้า</div>
+                    <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >ทำรายการซื้อสินค้า</div>
                     <bs4.Row>
                         <bs4.Col xs="4" >
                             <Autocomplete
@@ -372,7 +372,7 @@ class Order extends Component {
                             </bs4.ListGroup>
                         </bs4.Col>
                         <bs4.Col xs={{ size: 8 }} >
-                            <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >รายการขายสินค้า
+                            <div style={{ textAlign: "left", fontSize: "22px", fontWeight: "800" }} >รายการสินค้า
                             {/* <bs4.Button type="button" id="btnChangeDel" color="danger" >ยกเลิกรายการ</bs4.Button> */}
                             </div>
                             <bs4.Table>
@@ -407,4 +407,4 @@ class Order extends Component {
 function mapStateToProps(state) {
     return state
 }
-export default connect(mapStateToProps)(Order);
+export default connect(mapStateToProps)(PurchaseOrder);

@@ -55,7 +55,7 @@ class AddNewItem extends Component {
     }]
     var url = proxy.develop + "web-item/add-item/"
     var res_api = await public_function.api_post(url, "_callApiSaveNewItem", dataSend)
-    if (res_api.status == 200) {
+    if (res_api.status == 201) {
       self.setState({ is_confirm: false })
       self.props.dispatch(is_loader(false))
     }

@@ -63,7 +63,7 @@ class Header extends Component {
                 <Navbar className="bgHeader" light expand="md">
                     <NavbarBrand href="/" className="logo_header"></NavbarBrand>
                     <div style={{width:"65%"}}>
-                        <h5 style={{ color: "#ffffff",float:"left" }} >Butsaracam Shop</h5>
+                        <h5 style={{ color: "#ffffff",float:"left" }} >JB Shop</h5>
                         <span id="loader" style={{ float: "right",marginTop:"-20px",display:"none" }} >
                         <Loader isLoading={this.state.isLoading} />
                         </span>
